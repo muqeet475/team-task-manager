@@ -4,16 +4,16 @@ const path = require("path");
 
 const app = express();
 
-// Middleware
+// ✅ Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// MongoDB
+// ✅ MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected ✅"))
   .catch(err => console.error("DB Error:", err));
 
-// 🔥 SAFE ROUTE LOADING (IMPORTANT)
+// ✅ Routes (safe loading)
 try {
   app.use("/api/auth", require("./routes/auth"));
   console.log("Auth route loaded");
@@ -35,17 +35,17 @@ try {
   console.error("Task route error:", e.message);
 }
 
-// Root
+// ✅ ROOT → serve frontend (IMPORTANT FIX)
 app.get("/", (req, res) => {
-  res.send("Server running 🚀");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Health
+// ✅ Health check (for Railway)
 app.get("/health", (req, res) => {
-  res.send("OK");
+  res.status(200).send("OK");
 });
 
-// Start server
+// ✅ Start server (Railway compatible)
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, "0.0.0.0", () => {
