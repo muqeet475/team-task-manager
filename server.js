@@ -7,17 +7,15 @@ const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 
-// ✅ MongoDB connection
-mongoose.connect(
-  "mongodb://admin:admin123@ac-acynnro-shard-00-00.okjyfpn.mongodb.net:27017,ac-acynnro-shard-00-01.okjyfpn.mongodb.net:27017,ac-acynnro-shard-00-02.okjyfpn.mongodb.net:27017/?ssl=true&replicaSet=atlas-x5j7jw-shard-0&authSource=admin"
-)
-.then(() => console.log("MongoDB Connected ✅"))
-.catch(err => console.log("DB Error:", err));
+// ✅ MongoDB connection (UPDATED)
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected ✅"))
+  .catch(err => console.log("DB Error:", err));
 
 // ✅ Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/project", require("./routes/project"));
-app.use("/api/task", require("./routes/task"));   // 🔥 NEW ADDED
+app.use("/api/task", require("./routes/task"));
 
 // ✅ Test route
 app.get("/", (req, res) => {
@@ -26,5 +24,4 @@ app.get("/", (req, res) => {
 
 // ✅ Start server
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));
