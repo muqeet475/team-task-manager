@@ -9,44 +9,35 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // ✅ MongoDB connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected ✅"))
-  .catch(err => console.error("DB Error:", err));
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("MongoDB Connected ✅"))
+.catch(err => console.error("DB Error:", err));
 
-// ✅ Routes (safe loading)
-try {
-  app.use("/api/auth", require("./routes/auth"));
-  console.log("Auth route loaded");
-} catch (e) {
-  console.error("Auth route error:", e.message);
-}
+// ✅ Routes
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/project", require("./routes/project"));
+app.use("/api/task", require("./routes/task"));
 
-try {
-  app.use("/api/project", require("./routes/project"));
-  console.log("Project route loaded");
-} catch (e) {
-  console.error("Project route error:", e.message);
-}
-
-try {
-  app.use("/api/task", require("./routes/task"));
-  console.log("Task route loaded");
-} catch (e) {
-  console.error("Task route error:", e.message);
-}
-
-// ✅ ROOT → serve frontend (IMPORTANT FIX)
+// ✅ Root → serve frontend
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// ✅ Health check (for Railway)
+// ✅ Health check (VERY IMPORTANT)
 app.get("/health", (req, res) => {
   res.status(200).send("OK");
 });
 
-// ✅ Start server (Railway compatible)
-const PORT = process.env.PORT || 8080;
+// ✅ Start server (STRICT Railway binding)
+const PORT = process.env.PORT;
+
+if (!PORT) {
+  console.error("PORT not defined ❌");
+  process.exit(1);
+}
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on ${PORT}`);
