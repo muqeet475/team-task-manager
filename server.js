@@ -4,26 +4,35 @@ const path = require("path");
 
 const app = express();
 
-// ✅ Middleware
+// Middleware
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 
-// ✅ MongoDB connection
+// MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected ✅"))
-  .catch(err => console.log("DB Error:", err));
+  .catch(err => console.error("DB Error:", err));
 
-// ✅ Routes
-app.use("/api/auth", require("./routes/auth"));
-app.use("/api/project", require("./routes/project"));
-app.use("/api/task", require("./routes/task"));
+// Routes
+try {
+  app.use("/api/auth", require("./routes/auth"));
+  app.use("/api/project", require("./routes/project"));
+  app.use("/api/task", require("./routes/task"));
+} catch (err) {
+  console.error("Route load error:", err);
+}
 
-// ✅ Serve frontend (IMPORTANT)
+// Root route
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// ✅ Start server (FIXED)
+// Health check (VERY IMPORTANT for Railway)
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
+// Start server
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, "0.0.0.0", () => {
