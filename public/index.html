@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Team Task Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Team Task Manager</h1>
+
+<div class="container">
+
+  <!-- LOGIN / SIGNUP -->
+  <div id="loginBox" class="card">
+    <h3>Login / Signup</h3>
+
+    <input id="email" placeholder="Email">
+    <input id="password" placeholder="Password" type="password">
+
+    <button onclick="login()">Login</button>
+    <button onclick="signup()" class="secondary">Signup</button>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="app" style="display:none;">
+
+    <div class="card">
+      <h3>Welcome <span id="userName"></span></h3>
+      <button onclick="loadDashboard()">Load Dashboard</button>
+      <div id="dashboard"></div>
+    </div>
+
+    <div class="card">
+      <h3>Create Project</h3>
+      <input id="projectName" placeholder="Project name">
+      <button onclick="createProject()">Create Project</button>
+    </div>
+
+    <div class="card">
+      <h3>Create Task</h3>
+      <input id="title" placeholder="Task Title">
+      <input id="assignedTo" placeholder="Assign Email">
+      <select id="projectSelect"></select>
+      <button onclick="createTask()">Create Task</button>
+    </div>
+
+    <div class="card">
+      <h3>All Tasks</h3>
+      <button onclick="loadTasks()">Load Tasks</button>
+      <div id="taskList"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
