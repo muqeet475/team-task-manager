@@ -26,4 +26,4 @@ GitHub:
 https://github.com/muqeet475/team-task-manager
 
 Author:
-Abdul Muqeet
+Abdul Muqeet Ansari
