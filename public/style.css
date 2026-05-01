@@ -1,15 +1,13 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #f4f6f9;
   margin: 0;
+  background: linear-gradient(135deg, #ff0080, #7928ca);
 }
 
 h1 {
   text-align: center;
   padding: 20px;
-  background: #111;
   color: white;
-  margin: 0;
 }
 
 .container {
@@ -19,48 +17,45 @@ h1 {
   padding: 20px;
 }
 
+.auth-container {
+  display: flex;
+  justify-content: center;
+}
+
 .card {
   background: white;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 25px;
+  margin: 10px;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  width: 300px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  text-align: center;
 }
 
 input, select {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
-  border: 1px solid #ccc;
   border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
 button {
   width: 100%;
   padding: 10px;
-  background: black;
-  color: white;
   border: none;
   border-radius: 6px;
+  background: linear-gradient(135deg, #7928ca, #ff0080);
+  color: white;
   cursor: pointer;
 }
 
 button:hover {
-  background: #333;
+  opacity: 0.9;
 }
 
-.secondary {
-  background: #555;
-}
-
-.secondary:hover {
-  background: #777;
-}
-
-#dashboard p {
-  margin: 5px 0;
-}
-
-#taskList p {
-  margin: 8px 0;
+span {
+  color: #7928ca;
+  cursor: pointer;
+  font-weight: bold;
 }

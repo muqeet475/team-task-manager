@@ -10,15 +10,37 @@
 
 <div class="container">
 
-  <!-- LOGIN / SIGNUP -->
-  <div id="loginBox" class="card">
-    <h3>Login / Signup</h3>
+  <!-- AUTH UI -->
+  <div id="loginBox" class="auth-container">
 
-    <input id="email" placeholder="Email">
-    <input id="password" placeholder="Password" type="password">
+    <!-- SIGNUP -->
+    <div class="card" id="signupCard">
+      <h3>Create Account</h3>
 
-    <button onclick="login()">Login</button>
-    <button onclick="signup()" class="secondary">Signup</button>
+      <input id="email" placeholder="Email">
+      <input id="password" type="password" placeholder="Password">
+
+      <button onclick="signup()">Sign Up</button>
+
+      <p>Already have account? 
+        <span onclick="showLogin()">Login</span>
+      </p>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="card" id="loginCard" style="display:none;">
+      <h3>Login</h3>
+
+      <input id="loginEmail" placeholder="Email">
+      <input id="loginPassword" type="password" placeholder="Password">
+
+      <button onclick="login()">Login</button>
+
+      <p>Don't have account? 
+        <span onclick="showSignup()">Signup</span>
+      </p>
+    </div>
+
   </div>
 
   <!-- MAIN APP -->
@@ -55,6 +77,5 @@
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>

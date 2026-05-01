@@ -1,6 +1,17 @@
 let userRole = "";
 let projects = [];
 
+// ================= UI TOGGLE =================
+function showLogin() {
+  document.getElementById("signupCard").style.display = "none";
+  document.getElementById("loginCard").style.display = "block";
+}
+
+function showSignup() {
+  document.getElementById("signupCard").style.display = "block";
+  document.getElementById("loginCard").style.display = "none";
+}
+
 // ================= SIGNUP =================
 async function signup() {
   const email = document.getElementById("email").value;
@@ -11,58 +22,81 @@ async function signup() {
     return;
   }
 
-  const res = await fetch(`/api/auth/signup`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: email.split("@")[0],
-      email,
-      password,
-      role: "admin"
-    })
-  });
+  try {
+    const res = await fetch(`/api/auth/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: email.split("@")[0],
+        email,
+        password,
+        role: "admin"
+      })
+    });
 
-  const data = await res.json();
-  alert(data.message || "Signup successful");
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("Signup successful ✅");
+      showLogin(); // switch to login
+    } else {
+      alert(data.message || "Signup failed");
+    }
+  } catch (err) {
+    alert("Server error");
+  }
 }
 
 // ================= LOGIN =================
 async function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
 
-  const res = await fetch(`/api/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
-  });
+  if (!email || !password) {
+    alert("Enter email & password");
+    return;
+  }
 
-  const data = await res.json();
+  try {
+    const res = await fetch(`/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
 
-  if (data.user) {
-    userRole = data.user.role;
+    const data = await res.json();
 
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("app").style.display = "block";
+    if (data.user) {
+      userRole = data.user.role;
 
-    document.getElementById("userName").innerText = data.user.name;
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("app").style.display = "block";
 
-    alert("Login successful ✅");
-  } else {
-    alert(data.message);
+      document.getElementById("userName").innerText = data.user.name;
+
+      alert("Login successful ✅");
+    } else {
+      alert(data.message || "Login failed");
+    }
+  } catch (err) {
+    alert("Server error");
   }
 }
 
 // ================= DASHBOARD =================
 async function loadDashboard() {
-  const res = await fetch(`/api/task/dashboard`);
-  const data = await res.json();
+  try {
+    const res = await fetch(`/api/task/dashboard`);
+    const data = await res.json();
 
-  document.getElementById("dashboard").innerHTML = `
-    <p><b>Total:</b> ${data.total}</p>
-    <p><b>Pending:</b> ${data.pending}</p>
-    <p><b>Completed:</b> ${data.completed}</p>
-  `;
+    document.getElementById("dashboard").innerHTML = `
+      <p><b>Total:</b> ${data.total}</p>
+      <p><b>Pending:</b> ${data.pending}</p>
+      <p><b>Completed:</b> ${data.completed}</p>
+    `;
+  } catch (err) {
+    alert("Error loading dashboard");
+  }
 }
 
 // ================= CREATE PROJECT =================
@@ -74,30 +108,34 @@ async function createProject() {
     return;
   }
 
-  const res = await fetch(`/api/project/create`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "role": "admin"
-    },
-    body: JSON.stringify({
-      name,
-      members: []
-    })
-  });
+  try {
+    const res = await fetch(`/api/project/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "role": "admin"
+      },
+      body: JSON.stringify({
+        name,
+        members: []
+      })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (data.project) {
-    projects.push(data.project);
-    updateProjectDropdown();
-    alert("Project created ✅");
-  } else {
-    alert("Error creating project");
+    if (data.project) {
+      projects.push(data.project);
+      updateProjectDropdown();
+      alert("Project created ✅");
+    } else {
+      alert(data.message || "Error creating project");
+    }
+  } catch (err) {
+    alert("Server error");
   }
 }
 
-// ================= UPDATE DROPDOWN =================
+// ================= UPDATE PROJECT DROPDOWN =================
 function updateProjectDropdown() {
   const select = document.getElementById("projectSelect");
   select.innerHTML = "";
@@ -121,45 +159,53 @@ async function createTask() {
     return;
   }
 
-  const res = await fetch(`/api/task/create`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "role": userRole
-    },
-    body: JSON.stringify({
-      title,
-      assignedTo,
-      projectId
-    })
-  });
+  try {
+    const res = await fetch(`/api/task/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "role": userRole
+      },
+      body: JSON.stringify({
+        title,
+        assignedTo,
+        projectId
+      })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (data.task) {
-    alert("Task created ✅");
-    loadTasks();
-  } else {
-    alert("Error creating task");
+    if (data.task) {
+      alert("Task created ✅");
+      loadTasks();
+    } else {
+      alert(data.message || "Error creating task");
+    }
+  } catch (err) {
+    alert("Server error");
   }
 }
 
 // ================= LOAD TASKS =================
 async function loadTasks() {
-  const res = await fetch(`/api/task`);
-  const tasks = await res.json();
+  try {
+    const res = await fetch(`/api/task`);
+    const tasks = await res.json();
 
-  let html = "";
+    let html = "";
 
-  tasks.forEach(t => {
-    html += `
-      <p>
-        <b>${t.title}</b> (${t.status})<br>
-        Assigned: ${t.assignedTo}
-      </p>
-      <hr>
-    `;
-  });
+    tasks.forEach(t => {
+      html += `
+        <p>
+          <b>${t.title}</b> (${t.status})<br>
+          Assigned: ${t.assignedTo}
+        </p>
+        <hr>
+      `;
+    });
 
-  document.getElementById("taskList").innerHTML = html;
+    document.getElementById("taskList").innerHTML = html;
+  } catch (err) {
+    alert("Error loading tasks");
+  }
 }
